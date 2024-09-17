@@ -3,24 +3,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Clona o repositório Git
                 git 'https://github.com/Ansoferreiro/Testes'
             }
         }
         stage('Run Tests') {
             steps {
-                // Instala dependências (opcional, depende de seu setup)
-                sh 'pip install -r requirements.txt'
-                
-                // Executa os testes automatizados
-                sh 'python3 test_android_device.py'
+                script {
+                    // Comando para executar os testes
+                    sh './run_tests.sh'
+                }
+            }
+        }
+        stage('Publish Test Results') {
+            steps {
+                junit '**/target/test-*.xml'
             }
         }
     }
     post {
         always {
-            // Arquiva os resultados de teste no Jenkins
-            junit '**/test-reports/*.xml'
+            archiveArtifacts artifacts: '**/target/*.apk', allowEmptyArchive: true
         }
     }
 }
