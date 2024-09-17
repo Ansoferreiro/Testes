@@ -1,26 +1,27 @@
- {
+pipeline {
     agent any
     stages {
         stage('Checkout') {
             steps {
                 // Clona o repositório Git
-                git 'https://github.com/Ansoferreiro/Testes.git'
+                git 'https://github.com/Ansoferreiro/Testes'
             }
         }
         stage('Run Tests') {
             steps {
-                // Instalar dependências (se necessário)
+                // Instala dependências (opcional, depende de seu setup)
                 sh 'pip install -r requirements.txt'
                 
-                // Executar o script de testes
+                // Executa os testes automatizados
                 sh 'python3 test_android_device.py'
             }
         }
     }
     post {
         always {
-            // Arquivar resultados dos testes
+            // Arquiva os resultados de teste no Jenkins
             junit '**/test-reports/*.xml'
         }
     }
 }
+
